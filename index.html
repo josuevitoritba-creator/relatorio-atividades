@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Relatório de Atividades</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Special+Elite&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+:root{
+  --paper:#EFE8D8; --paper-card:#FBF8EF; --line:#C9BFA0; --ink:#26241D;
+  --ink-soft:#5b5644; --red:#9B2C2C; --green:#355E3B; --gold:#A67C00;
+  --c-trabalho:#3B5166; --c-estudo:#A67C00; --c-exercicio:#355E3B;
+  --c-pessoal:#9B2C2C; --c-saude:#2F6B66; --c-outro:#6B5B73;
+  --font-display:'Special Elite',monospace;
+  --font-body:'Source Serif 4','Lora',serif;
+  --font-mono:'IBM Plex Mono',monospace;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{background:#DCD3BB;font-family:var(--font-body);color:var(--ink);padding:32px 16px;min-height:100vh;}
+*:focus-visible{outline:2px solid var(--c-trabalho);outline-offset:2px;}
+.app{max-width:1040px;margin:0 auto;background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:32px;box-shadow:0 10px 28px rgba(0,0,0,.14);}
+
+/* COVER */
+.cover{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;border-bottom:1px dashed var(--line);padding-bottom:20px;margin-bottom:28px;flex-wrap:wrap;}
+.eyebrow{font-family:var(--font-mono);letter-spacing:2px;font-size:11px;color:var(--ink-soft);text-transform:uppercase;margin:0;}
+.cover h1{font-family:var(--font-display);font-size:28px;margin:6px 0 0;}
+.subtitle{font-family:var(--font-body);font-size:13.5px;color:var(--ink-soft);margin:8px 0 0;max-width:480px;line-height:1.5;}
+.stamp-date{border:2px solid var(--ink);border-radius:6px;padding:8px 14px;font-family:var(--font-mono);font-weight:600;font-size:13px;transform:rotate(3deg);white-space:nowrap;background:color-mix(in srgb,var(--ink) 6%,var(--paper-card));}
+
+/* LAYOUT */
+.ledger-page{display:grid;grid-template-columns:310px 1fr;gap:20px;margin-bottom:32px;}
+@media(max-width:760px){.ledger-page{grid-template-columns:1fr;}}
+.card{background:var(--paper-card);border:1px solid var(--line);border-radius:10px;padding:20px;position:relative;}
+.entry-card{transform:rotate(-0.3deg);}
+.entry-card::before{content:'';position:absolute;top:-10px;left:24px;width:70px;height:22px;background:color-mix(in srgb,var(--gold) 35%,var(--paper-card));opacity:.65;transform:rotate(-4deg);border-radius:2px;box-shadow:0 1px 2px rgba(0,0,0,.15);}
+.entry-card h2{font-family:var(--font-display);font-size:16px;margin:0 0 14px;}
+.list-card{padding-left:44px;}
+.list-card::before{content:'';position:absolute;left:32px;top:20px;bottom:20px;width:2px;background:var(--red);opacity:.5;}
+
+/* FORM FIELDS */
+.field{display:block;margin-bottom:12px;}
+.field-label{display:block;font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--ink-soft);margin-bottom:5px;}
+input,select,textarea{width:100%;padding:7px 10px;border:1px solid var(--line);border-radius:6px;background:var(--paper);font-family:var(--font-body);font-size:13.5px;color:var(--ink);}
+textarea{resize:vertical;}
+input[type=file]{font-size:12px;padding:5px;}
+.mini-label{display:block;font-size:10px;color:var(--ink-soft);margin-bottom:2px;}
+.hint{font-size:11px;color:var(--ink-soft);margin:4px 0 0;font-style:italic;}
+.duration-row{display:flex;gap:8px;}
+.duration-field{flex:1;}
+.checkbox-field{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink);margin-bottom:12px;cursor:pointer;}
+.checkbox-field input{width:auto;margin:0;accent-color:var(--red);}
+.submit-btn{width:100%;padding:10px;background:var(--ink);color:var(--paper-card);border:none;border-radius:6px;font-family:var(--font-display);letter-spacing:1px;text-transform:uppercase;font-size:13px;cursor:pointer;margin-top:4px;}
+.submit-btn:hover{background:var(--c-trabalho);}
+.ghost-btn{background:transparent;border:1px solid var(--ink-soft);color:var(--ink-soft);font-family:var(--font-mono);font-size:11px;text-transform:uppercase;letter-spacing:.5px;padding:6px 10px;border-radius:6px;cursor:pointer;}
+.ghost-btn:hover{border-color:var(--ink);color:var(--ink);}
+
+/* CATEGORIES */
+.cat-manage{margin:-4px 0 12px;}
+.cat-add-row{display:flex;gap:6px;}
+.cat-add-row input{flex:1;}
+.cat-chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px;}
+.cat-chip{display:inline-flex;align-items:center;gap:4px;font-family:var(--font-mono);font-size:10px;text-transform:uppercase;border:1px solid currentColor;border-radius:12px;padding:2px 4px 2px 8px;}
+.chip-del{background:none;border:none;color:inherit;cursor:pointer;font-size:12px;line-height:1;padding:0 2px;}
+.chip-del:hover{opacity:.6;}
+
+/* WEIGHT */
+.weight-row{display:flex;gap:4px;flex-wrap:wrap;}
+.wbtn{width:27px;height:27px;border-radius:50%;border:2px solid;font-family:var(--font-mono);font-size:11px;font-weight:600;cursor:pointer;background:transparent;transition:all .15s;padding:0;}
+.wbtn.wl{color:var(--green);border-color:var(--green);}
+.wbtn.wm{color:var(--gold);border-color:var(--gold);}
+.wbtn.wh{color:var(--red);border-color:var(--red);}
+.wbtn.active.wl{background:var(--green);color:#fff;}
+.wbtn.active.wm{background:var(--gold);color:#fff;}
+.wbtn.active.wh{background:var(--red);color:#fff;}
+.weight-badge{width:19px;height:19px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:9px;font-weight:700;flex-shrink:0;border:2px solid;}
+.weight-badge.wl{color:var(--green);border-color:var(--green);}
+.weight-badge.wm{color:var(--gold);border-color:var(--gold);}
+.weight-badge.wh{color:var(--red);border-color:var(--red);}
+
+/* RESPONSE TYPE PILLS */
+.resp-type-grid{display:flex;flex-wrap:wrap;gap:5px;}
+.resp-pill{padding:4px 9px;border:1px solid var(--ink-soft);border-radius:12px;background:transparent;font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.3px;cursor:pointer;color:var(--ink-soft);transition:all .12s;}
+.resp-pill:hover{border-color:var(--ink);color:var(--ink);}
+.resp-pill.active{background:var(--ink);color:var(--paper-card);border-color:var(--ink);}
+
+/* RESPONSE FIELDS */
+.resp-section{margin-top:10px;}
+.resp-sep{border:none;border-top:1px dashed var(--line);margin:10px 0;}
+.simnao-toggle{display:flex;gap:8px;}
+.simnao-btn{flex:1;padding:9px;border:2px solid var(--line);border-radius:8px;font-family:var(--font-display);font-size:13px;cursor:pointer;background:var(--paper);color:var(--ink-soft);transition:all .12s;}
+.simnao-btn.active-sim{border-color:var(--green);background:color-mix(in srgb,var(--green) 12%,var(--paper));color:var(--green);}
+.simnao-btn.active-nao{border-color:var(--red);background:color-mix(in srgb,var(--red) 12%,var(--paper));color:var(--red);}
+.stars-row{display:flex;gap:2px;flex-wrap:wrap;}
+.star-btn{font-size:22px;cursor:pointer;background:none;border:none;color:var(--line);padding:1px;line-height:1;transition:color .08s;}
+.star-btn.active{color:var(--gold);}
+.emoji-grid{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:7px;}
+.emoji-btn{width:34px;height:34px;border:2px solid transparent;border-radius:7px;background:var(--paper);font-size:20px;cursor:pointer;padding:0;line-height:1;transition:border-color .1s,transform .1s;}
+.emoji-btn:hover{transform:scale(1.1);}
+.emoji-btn.active{border-color:var(--c-trabalho);transform:scale(1.15);}
+.emoji-custom-row{display:flex;gap:6px;margin-top:4px;}
+.emoji-custom-row input{flex:1;font-size:18px;padding:4px 8px;}
+.sig-wrap{border:1px solid var(--line);border-radius:8px;background:#fff;overflow:hidden;}
+#sigCanvas{cursor:crosshair;width:100%;height:100px;display:block;touch-action:none;}
+.sig-actions{display:flex;gap:6px;padding:5px 7px;border-top:1px solid var(--line);background:var(--paper);}
+.custom-value-select{width:100%;}
+.resp-value-display{display:inline-flex;align-items:center;gap:5px;margin-top:5px;font-size:13px;}
+.badge-sim{color:var(--green);font-family:var(--font-mono);font-size:11px;border:1px solid var(--green);border-radius:4px;padding:1px 7px;}
+.badge-nao{color:var(--red);font-family:var(--font-mono);font-size:11px;border:1px solid var(--red);border-radius:4px;padding:1px 7px;}
+.stars-display{color:var(--gold);font-size:13px;letter-spacing:1px;}
+.valor-display{font-family:var(--font-mono);font-size:12px;color:var(--c-trabalho);}
+.custom-display{font-family:var(--font-mono);font-size:11px;color:var(--ink-soft);}
+.sig-thumb{height:30px;border-radius:4px;border:1px solid var(--line);background:#fff;}
+
+/* PHOTO */
+.photo-preview-wrap{display:flex;align-items:center;gap:10px;margin-top:7px;}
+.photo-preview{width:50px;height:50px;object-fit:cover;border-radius:6px;border:1px solid var(--line);}
+
+/* ENTRIES */
+.list-header{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;}
+.list-header h2{font-family:var(--font-display);font-size:16px;margin:0;}
+.list-actions{display:flex;gap:8px;flex-wrap:wrap;}
+.entries-list{display:flex;flex-direction:column;}
+.entry-row{display:flex;align-items:flex-start;gap:10px;padding:11px 0;border-bottom:1px dashed var(--line);}
+.entry-row:last-child{border-bottom:none;}
+.entry-thumb,.entry-thumb-ph{width:42px;height:42px;border-radius:6px;flex-shrink:0;}
+.entry-thumb{border:1px solid var(--line);object-fit:cover;cursor:pointer;}
+.entry-thumb-ph{border:1px dashed var(--line);background:var(--paper);}
+.entry-main{flex:1;min-width:0;}
+.entry-top{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:2px;}
+.entry-date{font-family:var(--font-mono);font-size:11px;color:var(--ink-soft);}
+.entry-cat{font-family:var(--font-mono);font-size:10px;text-transform:uppercase;padding:2px 6px;border-radius:4px;border:1px solid currentColor;}
+.required-flag{font-family:var(--font-mono);font-size:10px;text-transform:uppercase;padding:2px 6px;border-radius:4px;border:1px solid;}
+.required-flag.fp{color:var(--red);}
+.required-flag.fd{color:var(--green);}
+.entry-desc{font-size:13.5px;line-height:1.4;word-break:break-word;}
+.entry-response{margin-top:4px;}
+.entry-side{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.entry-dur{font-family:var(--font-mono);font-size:11px;color:var(--ink-soft);white-space:nowrap;}
+.entry-status{font-family:var(--font-display);font-size:10px;text-transform:uppercase;padding:2px 7px;border:2px solid currentColor;border-radius:4px;transform:rotate(-4deg);white-space:nowrap;}
+.entry-del{background:none;border:none;color:var(--ink-soft);cursor:pointer;font-size:16px;line-height:1;padding:0;}
+.entry-del:hover{color:var(--red);}
+.empty-state{display:none;text-align:center;color:var(--ink-soft);font-style:italic;padding:22px 0;font-size:13.5px;}
+.empty-state.visible{display:block;}
+
+/* REPORT */
+.report-page{background:var(--paper-card);border:1px solid var(--line);border-radius:10px;padding:24px;}
+.report-header{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:14px;margin-bottom:20px;padding-bottom:14px;border-bottom:1px dashed var(--line);}
+.report-header h2{font-family:var(--font-display);margin:0;font-size:18px;}
+.filters{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;}
+.filters label{font-family:var(--font-mono);font-size:10px;text-transform:uppercase;color:var(--ink-soft);display:flex;flex-direction:column;gap:3px;}
+.filters input,.filters select{padding:5px 7px;border:1px solid var(--line);border-radius:6px;background:var(--paper);font-size:12px;font-family:var(--font-body);width:auto;}
+.filter-chk{flex-direction:row !important;align-items:center;padding-bottom:7px;}
+.filter-chk input{width:auto;}
+.summary-stamps{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:26px;}
+.stamp-box{border:2px solid currentColor;border-radius:8px;padding:12px 18px;text-align:center;background:color-mix(in srgb,currentColor 6%,var(--paper-card));color:var(--ink);}
+.stamp-box:nth-child(1){transform:rotate(-1.5deg);}
+.stamp-box:nth-child(2){transform:rotate(1deg);color:var(--green);}
+.stamp-box:nth-child(3){transform:rotate(-1deg);color:var(--gold);}
+.stamp-box:nth-child(4){transform:rotate(1.5deg);color:var(--red);}
+.stamp-number{display:block;font-family:var(--font-mono);font-size:24px;font-weight:600;}
+.stamp-label{display:block;font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.5px;margin-top:4px;opacity:.85;}
+.breakdown{margin-bottom:22px;}
+.breakdown:last-child{margin-bottom:0;}
+.breakdown h3{font-family:var(--font-display);font-size:13px;margin:0 0 10px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:1px;}
+.bar-row{display:grid;grid-template-columns:120px 1fr 64px;align-items:center;gap:10px;margin-bottom:7px;}
+.bar-label{font-family:var(--font-mono);text-transform:uppercase;font-size:11px;}
+.bar-track{background:var(--paper);border:1px solid var(--line);border-radius:4px;height:13px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:3px 0 0 3px;}
+.bar-value{font-family:var(--font-mono);text-align:right;font-size:11px;color:var(--ink-soft);}
+.no-data{font-style:italic;color:var(--ink-soft);font-size:13px;margin:0;}
+.pending-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px dashed var(--line);flex-wrap:wrap;}
+.pending-row:last-child{border-bottom:none;}
+.pending-desc{flex:1;font-size:13px;min-width:140px;}
+.mark-done-btn{font-size:10px;}
+
+/* RESPONSE ANALYSIS */
+.analysis-block{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:14px;margin-bottom:10px;}
+.analysis-block:last-child{margin-bottom:0;}
+.analysis-block h4{font-family:var(--font-display);font-size:13px;margin:0 0 10px;text-transform:uppercase;letter-spacing:.5px;}
+.count-badge{font-size:10px;background:var(--ink);color:var(--paper-card);border-radius:10px;padding:1px 7px;vertical-align:middle;margin-left:6px;}
+.analysis-stat{font-family:var(--font-mono);font-size:12px;color:var(--ink-soft);margin:4px 0;}
+.analysis-stat strong{color:var(--ink);}
+.analysis-stat-label{font-family:var(--font-mono);font-size:11px;text-transform:uppercase;color:var(--ink-soft);margin:8px 0 2px;}
+.emoji-analysis{display:flex;flex-wrap:wrap;gap:10px;}
+.emoji-count{font-size:18px;display:inline-flex;align-items:center;gap:3px;}
+.emoji-count-num{font-family:var(--font-mono);font-size:11px;color:var(--ink-soft);}
+.text-values{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;}
+.text-value-chip{font-family:var(--font-mono);font-size:10px;background:var(--paper-card);border:1px solid var(--line);border-radius:10px;padding:2px 8px;}
+.score-avg-row{display:flex;align-items:center;gap:10px;margin-top:4px;}
+
+/* MODALS */
+.photo-modal{display:none;position:fixed;inset:0;background:rgba(20,18,14,.85);z-index:50;align-items:center;justify-content:center;padding:24px;}
+.photo-modal.visible{display:flex;}
+.photo-modal img{max-width:90vw;max-height:85vh;border-radius:8px;box-shadow:0 12px 30px rgba(0,0,0,.4);}
+.photo-modal-close{position:absolute;top:20px;right:24px;background:var(--paper-card);border:none;width:36px;height:36px;border-radius:50%;font-size:18px;cursor:pointer;color:var(--ink);}
+.footnote{margin-top:22px;font-size:11.5px;color:var(--ink-soft);font-family:var(--font-mono);text-align:center;}
+
+@media print{
+  body{background:white;padding:0;}
+  .entry-card,.filters,.ghost-btn,.entry-del,.footnote,.photo-modal{display:none !important;}
+  .app{box-shadow:none;border:none;}
+  .ledger-page{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header class="cover">
+    <div>
+      <p class="eyebrow">Diário de bordo · controle pessoal</p>
+      <h1>Relatório de Atividades</h1>
+      <p class="subtitle">Registre atividades com tipo de resposta personalizável, peso por importância, foto e controle de obrigatórias.</p>
+    </div>
+    <div class="stamp-date" id="todayStamp">—</div>
+  </header>
+
+  <main class="ledger-page">
+    <!-- FORMULÁRIO -->
+    <section class="card entry-card">
+      <h2>Nova entrada</h2>
+      <form id="entryForm">
+
+        <label class="field">
+          <span class="field-label">Data</span>
+          <input type="date" id="f-date" required>
+        </label>
+
+        <label class="field">
+          <span class="field-label">Categoria</span>
+          <select id="f-category"></select>
+        </label>
+        <div class="cat-manage">
+          <div class="cat-add-row">
+            <input type="text" id="newCatInput" placeholder="Nova categoria">
+            <button type="button" id="addCatBtn" class="ghost-btn">+</button>
+          </div>
+          <div id="customCatChips" class="cat-chips"></div>
+        </div>
+
+        <label class="field">
+          <span class="field-label">Descrição</span>
+          <input type="text" id="f-desc" required placeholder="O que foi feito?">
+        </label>
+
+        <div class="field">
+          <span class="field-label">Duração</span>
+          <div class="duration-row">
+            <div class="duration-field"><span class="mini-label">Horas</span><input type="number" id="f-hours" min="0" placeholder="0"></div>
+            <div class="duration-field"><span class="mini-label">Minutos</span><input type="number" id="f-minutes" min="0" max="59" placeholder="0"></div>
+          </div>
+        </div>
+
+        <div class="field">
+          <span class="field-label">Peso / Importância (1–9)</span>
+          <div class="weight-row" id="weightBtns"></div>
+        </div>
+
+        <div class="field">
+          <span class="field-label">Foto (opcional)</span>
+          <input type="file" id="f-photo" accept="image/*">
+          <div id="photoPreviewWrap" class="photo-preview-wrap" style="display:none">
+            <img id="photoPreview" class="photo-preview" alt="Prévia">
+            <button type="button" id="removePhotoBtn" class="ghost-btn">Remover</button>
+          </div>
+        </div>
+
+        <label class="field">
+          <span class="field-label">Status</span>
+          <select id="f-status"></select>
+        </label>
+
+        <label class="checkbox-field">
+          <input type="checkbox" id="f-required">
+          Atividade obrigatória (precisa ser concluída)
+        </label>
+
+        <!-- TIPO DE RESPOSTA -->
+        <div class="field">
+          <span class="field-label">Tipo de resposta</span>
+          <div class="resp-type-grid" id="respTypePills">
+            <button type="button" class="resp-pill active" data-type="none">Nenhum</button>
+            <button type="button" class="resp-pill" data-type="sim_nao">Sim/Não</button>
+            <button type="button" class="resp-pill" data-type="pontuacao">Pontuação</button>
+            <button type="button" class="resp-pill" data-type="reacao">Reação</button>
+            <button type="button" class="resp-pill" data-type="valor">Valor</button>
+            <button type="button" class="resp-pill" data-type="assinatura">Assinatura</button>
+            <button type="button" class="resp-pill" data-type="personalizado">Personalizado</button>
+          </div>
+        </div>
+
+        <!-- CAMPOS DE RESPOSTA (condicionais) -->
+        <div id="rfWrap" style="display:none">
+          <hr class="resp-sep">
+
+          <!-- Sim / Não -->
+          <div id="rf-sim_nao" class="resp-section" style="display:none">
+            <span class="field-label">Resultado</span>
+            <div class="simnao-toggle">
+              <button type="button" class="simnao-btn" id="snSim" data-val="sim">✓ Sim</button>
+              <button type="button" class="simnao-btn" id="snNao" data-val="nao">✗ Não</button>
+            </div>
+            <input type="hidden" id="rv-sim_nao">
+          </div>
+
+          <!-- Pontuação -->
+          <div id="rf-pontuacao" class="resp-section" style="display:none">
+            <div class="duration-row" style="margin-bottom:8px">
+              <div class="duration-field">
+                <span class="mini-label">Máximo de pontos</span>
+                <select id="rc-pont-max"><option>3</option><option>5</option><option selected>10</option><option>20</option><option>100</option></select>
+              </div>
+              <div class="duration-field">
+                <span class="mini-label">Pontuação obtida</span>
+                <input type="number" id="rv-pontuacao" min="0" placeholder="0">
+              </div>
+            </div>
+            <div id="starsRow" class="stars-row"></div>
+          </div>
+
+          <!-- Reação -->
+          <div id="rf-reacao" class="resp-section" style="display:none">
+            <span class="field-label">Selecione uma reação</span>
+            <div id="emojiGrid" class="emoji-grid"></div>
+            <div class="emoji-custom-row">
+              <input type="text" id="emojiCustomInput" placeholder="Emoji" maxlength="4">
+              <button type="button" id="addEmojiBtn" class="ghost-btn">Adicionar</button>
+            </div>
+            <input type="hidden" id="rv-reacao">
+          </div>
+
+          <!-- Valor -->
+          <div id="rf-valor" class="resp-section" style="display:none">
+            <span class="field-label">Valor numérico</span>
+            <div class="duration-row">
+              <div class="duration-field" style="flex:0 0 90px">
+                <span class="mini-label">Unidade</span>
+                <input type="text" id="rc-val-unit" placeholder="R$, kg, km…" maxlength="8">
+              </div>
+              <div class="duration-field">
+                <span class="mini-label">Valor</span>
+                <input type="number" id="rv-valor" placeholder="0.00" step="any">
+              </div>
+            </div>
+          </div>
+
+          <!-- Assinatura -->
+          <div id="rf-assinatura" class="resp-section" style="display:none">
+            <span class="field-label">Assinatura</span>
+            <label class="mini-label" style="margin-bottom:4px">Nome do assinante (opcional)</label>
+            <input type="text" id="rc-sig-label" placeholder="Ex: Responsável, Cliente…" style="margin-bottom:8px">
+            <div class="sig-wrap">
+              <canvas id="sigCanvas" width="270" height="100"></canvas>
+              <div class="sig-actions">
+                <button type="button" id="clearSigBtn" class="ghost-btn" style="font-size:10px">Limpar</button>
+                <span class="hint" style="margin:0;align-self:center">Desenhe no campo acima</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Personalizado -->
+          <div id="rf-personalizado" class="resp-section" style="display:none">
+            <span class="field-label">Campo personalizado</span>
+            <label class="mini-label">Nome do campo</label>
+            <input type="text" id="rc-cust-label" placeholder="Ex: Temperatura, Participantes…" style="margin-bottom:8px">
+            <label class="mini-label">Tipo de dado</label>
+            <select id="rc-cust-type" style="margin-bottom:8px">
+              <option value="texto">Texto livre</option>
+              <option value="numero">Número</option>
+              <option value="escolha">Múltipla escolha</option>
+            </select>
+            <div id="custOptsWrap" style="display:none">
+              <label class="mini-label">Opções (uma por linha)</label>
+              <textarea id="rc-cust-opts" rows="3" placeholder="Opção 1&#10;Opção 2&#10;Opção 3" style="margin-bottom:8px"></textarea>
+            </div>
+            <label class="mini-label">Resposta</label>
+            <div id="custValueWrap"></div>
+          </div>
+        </div>
+
+        <button type="submit" class="submit-btn" style="margin-top:14px">Lançar atividade</button>
+      </form>
+    </section>
+
+    <!-- LISTA DE LANÇAMENTOS -->
+    <section class="card list-card">
+      <div class="list-header">
+        <h2>Lançamentos</h2>
+        <div class="list-actions">
+          <button id="exportBtn" class="ghost-btn">CSV</button>
+          <button id="resetBtn" class="ghost-btn">Limpar tudo</button>
+        </div>
+      </div>
+      <div id="entriesList" class="entries-list"></div>
+      <p id="emptyState" class="empty-state">Nenhuma atividade lançada ainda.</p>
+    </section>
+  </main>
+
+  <!-- RELATÓRIO -->
+  <section class="report-page">
+    <div class="report-header">
+      <h2>Relatório</h2>
+      <div class="filters">
+        <label>De<input type="date" id="filterFrom"></label>
+        <label>Até<input type="date" id="filterTo"></label>
+        <label>Categoria<select id="filterCategory"></select></label>
+        <label class="filter-chk"><input type="checkbox" id="filterRequiredOnly"> Obrigatórias</label>
+        <button id="clearFilters" class="ghost-btn">Limpar</button>
+        <button id="printBtn" class="ghost-btn">Imprimir</button>
+      </div>
+    </div>
+
+    <div class="summary-stamps">
+      <div class="stamp-box"><span class="stamp-number" id="totalCount">0</span><span class="stamp-label">atividades</span></div>
+      <div class="stamp-box"><span class="stamp-number" id="totalTime">0min</span><span class="stamp-label">tempo total</span></div>
+      <div class="stamp-box"><span class="stamp-number" id="totalDone">0</span><span class="stamp-label">concluídas</span></div>
+      <div class="stamp-box"><span class="stamp-number" id="totalRequired">0</span><span class="stamp-label">obrigatórias pend.</span></div>
+    </div>
+
+    <div class="breakdown" id="pendingSection">
+      <h3>Pendências obrigatórias</h3>
+      <div id="pendingList"></div>
+    </div>
+
+    <div class="breakdown">
+      <h3>Análise de respostas</h3>
+      <div id="responseAnalysis"></div>
+    </div>
+
+    <div class="breakdown">
+      <h3>Distribuição por peso</h3>
+      <div id="weightBarsReport"></div>
+    </div>
+
+    <div class="breakdown">
+      <h3>Por categoria</h3>
+      <div id="categoryBars"></div>
+    </div>
+
+    <div class="breakdown">
+      <h3>Por status</h3>
+      <div id="statusBars"></div>
+    </div>
+  </section>
+
+  <p class="footnote">Dados salvos automaticamente. Foto comprimida no dispositivo. Assinatura armazenada localmente.</p>
+</div>
+
+<div id="photoModal" class="photo-modal">
+  <button id="closeModalBtn" class="photo-modal-close">×</button>
+  <img id="modalImg" src="" alt="Foto ampliada">
+</div>
+
+<script>
+/* ===== CONSTANTS ===== */
+const DEFAULT_CATEGORIES = [
+  {id:'trabalho',label:'Trabalho',color:'var(--c-trabalho)',removable:false},
+  {id:'estudo',label:'Estudo',color:'var(--c-estudo)',removable:false},
+  {id:'exercicio',label:'Exercício',color:'var(--c-exercicio)',removable:false},
+  {id:'pessoal',label:'Pessoal',color:'var(--c-pessoal)',removable:false},
+  {id:'saude',label:'Saúde',color:'var(--c-saude)',removable:false},
+  {id:'outro',label:'Outro',color:'var(--c-outro)',removable:false},
+];
+const PALETTE = ['#3B5166','#A67C00','#355E3B','#9B2C2C','#2F6B66','#6B5B73','#7A4B6B','#4B6B7A','#8a5a2e','#4a6b2e'];
+const STATUS = [
+  {id:'concluido',label:'Concluído',color:'var(--green)'},
+  {id:'andamento',label:'Em andamento',color:'var(--gold)'},
+  {id:'pendente',label:'Pendente',color:'var(--red)'},
+];
+const DEFAULT_EMOJIS = ['😀','😊','😔','😤','🎯','✅','❌','⚡','🔥','❤️','👍','👎','💪','🏆','⚠️','📌','🌟','📊'];
+const MONTHS = ['JAN','FEV','MAR','ABR','MAI','JUN','JUL','AGO','SET','OUT','NOV','DEZ'];
+
+/* ===== STATE ===== */
+let activities = [];
+let customCategories = [];
+let customEmojis = [];
+let pendingPhoto = null;
+let currentResponseType = 'none';
+let currentStarValue = 0;
+let selectedWeight = 5;
+let selectedSimNao = null;
+let selectedEmoji = null;
+let sigCtx = null;
+let sigDrawing = false;
+let sigHasContent = false;
+
+/* ===== UTILS ===== */
+function todayISO(){const d=new Date(),tz=d.getTimezoneOffset()*60000;return new Date(d-tz).toISOString().slice(0,10);}
+function allCategories(){return [...DEFAULT_CATEGORIES,...customCategories];}
+function catInfo(id){return allCategories().find(c=>c.id===id)||{id:'outro',label:'Outro',color:'var(--c-outro)'};}
+function statusInfo(id){return STATUS.find(s=>s.id===id)||STATUS[2];}
+function fmtDate(iso){const[y,m,d]=iso.split('-');return `${d}/${m}/${y.slice(2)}`;}
+function fmtDuration(mins){const h=Math.floor(mins/60),m=mins%60;if(!h)return`${m}min`;if(!m)return`${h}h`;return`${h}h${String(m).padStart(2,'0')}`;}
+function escHtml(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+function slugify(t){return t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');}
+function wClass(w){return w<=3?'wl':w<=6?'wm':'wh';}
+function norm(a){return{weight:5,responseType:'none',responseConfig:{},responseValue:null,...a};}
+
+/* ===== STORAGE ===== */
+async function loadAll(){
+  try{const r=await window.storage.get('activities',false);activities=r?JSON.parse(r.value):[];}catch{activities=[];}
+  try{const r=await window.storage.get('categories',false);customCategories=r?JSON.parse(r.value):[];}catch{customCategories=[];}
+  try{const r=await window.storage.get('emojis',false);customEmojis=r?JSON.parse(r.value):[];}catch{customEmojis=[];}
+}
+async function save(){try{await window.storage.set('activities',JSON.stringify(activities),false);}catch(e){console.error(e);}}
+async function saveCats(){try{await window.storage.set('categories',JSON.stringify(customCategories),false);}catch(e){console.error(e);}}
+async function saveEmojis(){try{await window.storage.set('emojis',JSON.stringify(customEmojis),false);}catch(e){console.error(e);}}
+
+/* ===== PHOTO ===== */
+function compressImage(file){
+  return new Promise((res,rej)=>{
+    const r=new FileReader();
+    r.onload=e=>{
+      const img=new Image();
+      img.onload=()=>{
+        const max=480;let{width:w,height:h}=img;
+        if(w>h&&w>max){h=Math.round(h*max/w);w=max;}
+        else if(h>=w&&h>max){w=Math.round(w*max/h);h=max;}
+        const c=document.createElement('canvas');c.width=w;c.height=h;
+        c.getContext('2d').drawImage(img,0,0,w,h);
+        res(c.toDataURL('image/jpeg',0.62));
+      };
+      img.onerror=()=>rej(new Error('Imagem inválida'));
+      img.src=e.target.result;
+    };
+    r.onerror=()=>rej(new Error('Falha ao ler'));
+    r.readAsDataURL(file);
+  });
+}
+
+/* ===== SIGNATURE CANVAS ===== */
+function setupSigCanvas(){
+  const canvas=document.getElementById('sigCanvas');
+  if(!canvas)return;
+  sigCtx=canvas.getContext('2d');
+  sigCtx.strokeStyle='#26241D';sigCtx.lineWidth=2;sigCtx.lineCap='round';sigCtx.lineJoin='round';
+  let lastX,lastY;
+  function pos(e){
+    const rect=canvas.getBoundingClientRect();
+    const t=e.touches?e.touches[0]:e;
+    return{x:(t.clientX-rect.left)*(canvas.width/rect.width),y:(t.clientY-rect.top)*(canvas.height/rect.height)};
+  }
+  canvas.addEventListener('mousedown',e=>{sigDrawing=true;const p=pos(e);lastX=p.x;lastY=p.y;sigCtx.beginPath();sigCtx.moveTo(lastX,lastY);});
+  canvas.addEventListener('mousemove',e=>{if(!sigDrawing)return;const p=pos(e);sigCtx.lineTo(p.x,p.y);sigCtx.stroke();lastX=p.x;lastY=p.y;sigHasContent=true;});
+  canvas.addEventListener('mouseup',()=>{sigDrawing=false;});
+  canvas.addEventListener('mouseleave',()=>{sigDrawing=false;});
+  canvas.addEventListener('touchstart',e=>{e.preventDefault();sigDrawing=true;const p=pos(e);lastX=p.x;lastY=p.y;sigCtx.beginPath();sigCtx.moveTo(lastX,lastY);},{passive:false});
+  canvas.addEventListener('touchmove',e=>{e.preventDefault();if(!sigDrawing)return;const p=pos(e);sigCtx.lineTo(p.x,p.y);sigCtx.stroke();lastX=p.x;lastY=p.y;sigHasContent=true;},{passive:false});
+  canvas.addEventListener('touchend',()=>{sigDrawing=false;});
+  document.getElementById('clearSigBtn').addEventListener('click',()=>{sigCtx.clearRect(0,0,canvas.width,canvas.height);sigHasContent=false;});
+}
+function getSigData(){
+  if(!sigHasContent)return null;
+  return document.getElementById('sigCanvas').toDataURL('image/png');
+}
+
+/* ===== WEIGHT BUTTONS ===== */
+function buildWeightBtns(){
+  const wrap=document.getElementById('weightBtns');
+  wrap.innerHTML='';
+  for(let i=1;i<=9;i++){
+    const b=document.createElement('button');
+    b.type='button';b.textContent=i;b.dataset.w=i;
+    b.className='wbtn '+wClass(i)+(i===selectedWeight?' active':'');
+    b.addEventListener('click',()=>{selectedWeight=i;refreshWeightBtns();});
+    wrap.appendChild(b);
+  }
+}
+function refreshWeightBtns(){
+  document.querySelectorAll('.wbtn').forEach(b=>{
+    b.classList.toggle('active',Number(b.dataset.w)===selectedWeight);
+  });
+}
+
+/* ===== RESPONSE TYPE UI ===== */
+function switchResponseType(type){
+  currentResponseType=type;
+  document.querySelectorAll('.resp-pill').forEach(p=>p.classList.toggle('active',p.dataset.type===type));
+  document.getElementById('rfWrap').style.display=type==='none'?'none':'block';
+  ['sim_nao','pontuacao','reacao','valor','assinatura','personalizado'].forEach(t=>{
+    const el=document.getElementById('rf-'+t);
+    if(el)el.style.display=t===type?'block':'none';
+  });
+  if(type==='pontuacao')buildStars();
+  if(type==='reacao')buildEmojiGrid();
+  if(type==='personalizado')updateCustomValueField();
+}
+
+function buildStars(){
+  const max=Number(document.getElementById('rc-pont-max').value)||10;
+  const row=document.getElementById('starsRow');
+  row.innerHTML='';
+  for(let i=1;i<=max;i++){
+    const b=document.createElement('button');
+    b.type='button';b.textContent='★';b.dataset.v=i;
+    b.className='star-btn'+(currentStarValue>=i?' active':'');
+    b.addEventListener('click',()=>{
+      currentStarValue=Number(b.dataset.v);
+      document.getElementById('rv-pontuacao').value=currentStarValue;
+      document.querySelectorAll('.star-btn').forEach(s=>s.classList.toggle('active',Number(s.dataset.v)<=currentStarValue));
+    });
+    row.appendChild(b);
+  }
+}
+
+function buildEmojiGrid(){
+  const grid=document.getElementById('emojiGrid');
+  const all=[...DEFAULT_EMOJIS,...customEmojis];
+  grid.innerHTML=all.map(e=>`<button type="button" class="emoji-btn${selectedEmoji===e?' active':''}" data-e="${e}">${e}</button>`).join('');
+  grid.querySelectorAll('.emoji-btn').forEach(b=>{
+    b.addEventListener('click',()=>{
+      selectedEmoji=b.dataset.e;
+      document.getElementById('rv-reacao').value=selectedEmoji;
+      document.querySelectorAll('.emoji-btn').forEach(x=>x.classList.toggle('active',x.dataset.e===selectedEmoji));
+    });
+  });
+}
+
+function updateCustomValueField(){
+  const type=document.getElementById('rc-cust-type').value;
+  const optsWrap=document.getElementById('custOptsWrap');
+  optsWrap.style.display=type==='escolha'?'block':'none';
+  const vWrap=document.getElementById('custValueWrap');
+  if(type==='texto'){
+    vWrap.innerHTML='<input type="text" id="rv-custom" placeholder="Digite a resposta…">';
+  } else if(type==='numero'){
+    vWrap.innerHTML='<input type="number" id="rv-custom" placeholder="0" step="any">';
+  } else {
+    const opts=(document.getElementById('rc-cust-opts').value||'').split('\n').map(s=>s.trim()).filter(Boolean);
+    if(!opts.length){vWrap.innerHTML='<p class="hint">Adicione as opções acima.</p>';return;}
+    vWrap.innerHTML='<select id="rv-custom" class="custom-value-select"><option value="">Selecione…</option>'+opts.map(o=>`<option value="${escHtml(o)}">${escHtml(o)}</option>`).join('')+'</select>';
+  }
+}
+
+/* ===== GET RESPONSE VALUE FROM FORM ===== */
+function getResponseData(){
+  const type=currentResponseType;
+  if(type==='none')return{responseType:'none',responseConfig:{},responseValue:null};
+  const cfg={};let val=null;
+  if(type==='sim_nao'){val=document.getElementById('rv-sim_nao').value||null;}
+  else if(type==='pontuacao'){cfg.max=Number(document.getElementById('rc-pont-max').value)||10;val=currentStarValue||Number(document.getElementById('rv-pontuacao').value)||null;}
+  else if(type==='reacao'){val=selectedEmoji||document.getElementById('rv-reacao').value||null;}
+  else if(type==='valor'){cfg.unit=(document.getElementById('rc-val-unit').value||'').trim();const v=document.getElementById('rv-valor').value;val=v!==''?Number(v):null;}
+  else if(type==='assinatura'){cfg.signerLabel=(document.getElementById('rc-sig-label').value||'').trim();val=getSigData();}
+  else if(type==='personalizado'){cfg.fieldLabel=(document.getElementById('rc-cust-label').value||'Campo').trim();cfg.fieldType=document.getElementById('rc-cust-type').value;cfg.options=(document.getElementById('rc-cust-opts').value||'').split('\n').map(s=>s.trim()).filter(Boolean);const el=document.getElementById('rv-custom');val=el?el.value:null;}
+  return{responseType:type,responseConfig:cfg,responseValue:val};
+}
+
+/* ===== FORMAT RESPONSE FOR DISPLAY ===== */
+function fmtResponse(a){
+  const t=a.responseType,v=a.responseValue,c=a.responseConfig||{};
+  if(!t||t==='none'||v===null||v===undefined||v==='')return'';
+  if(t==='sim_nao')return v==='sim'?'<span class="badge-sim">✓ Sim</span>':'<span class="badge-nao">✗ Não</span>';
+  if(t==='pontuacao'){const max=c.max||10;const stars='★'.repeat(v)+'☆'.repeat(Math.max(0,max-v));return`<span class="stars-display">${stars}</span> <span class="valor-display">${v}/${max}</span>`;}
+  if(t==='reacao')return`<span style="font-size:20px">${v}</span>`;
+  if(t==='valor'){const u=c.unit||'';return`<span class="valor-display">${u} ${Number(v).toLocaleString('pt-BR')}</span>`;}
+  if(t==='assinatura'){const lbl=c.signerLabel?`<span class="custom-display">${escHtml(c.signerLabel)}</span>`:'';return`${lbl}<img src="${v}" class="sig-thumb" alt="Assinatura">`;}
+  if(t==='personalizado'){const lbl=c.fieldLabel||'Campo';return`<span class="custom-display">${escHtml(lbl)}: <strong>${escHtml(String(v))}</strong></span>`;}
+  return'';
+}
+
+/* ===== RENDER ENTRIES ===== */
+function renderEntries(){
+  const list=document.getElementById('entriesList');
+  const empty=document.getElementById('emptyState');
+  const sorted=[...activities].map(norm).sort((a,b)=>b.date.localeCompare(a.date)||b.createdAt-a.createdAt);
+  if(!sorted.length){list.innerHTML='';empty.classList.add('visible');return;}
+  empty.classList.remove('visible');
+  list.innerHTML=sorted.map(a=>{
+    const cat=catInfo(a.category),st=statusInfo(a.status);
+    const w=a.weight||5,wc=wClass(w);
+    const thumb=a.photo?`<img src="${a.photo}" class="entry-thumb" data-photo="${a.photo}" alt="Foto">`:`<span class="entry-thumb-ph" aria-hidden="true"></span>`;
+    const flagHtml=a.required?`<span class="required-flag ${a.status==='concluido'?'fd':'fp'}">⚑ Obrigatória</span>`:'';
+    const resp=fmtResponse(a);
+    const respHtml=resp?`<div class="entry-response">${resp}</div>`:'';
+    return`<div class="entry-row">
+      ${thumb}
+      <div class="entry-main">
+        <div class="entry-top">
+          <span class="entry-date">${fmtDate(a.date)}</span>
+          <span class="entry-cat" style="color:${cat.color}">${cat.label}</span>
+          <span class="weight-badge ${wc}" title="Peso ${w}">${w}</span>
+          ${flagHtml}
+        </div>
+        <div class="entry-desc">${escHtml(a.desc)}</div>
+        ${respHtml}
+      </div>
+      <div class="entry-side">
+        <span class="entry-dur">${fmtDuration(a.minutes)}</span>
+        <span class="entry-status" style="color:${st.color}">${st.label}</span>
+        <button class="entry-del" data-id="${a.id}" title="Excluir">×</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ===== REPORT ===== */
+function getFiltered(){
+  const from=document.getElementById('filterFrom').value;
+  const to=document.getElementById('filterTo').value;
+  const cat=document.getElementById('filterCategory').value;
+  const reqOnly=document.getElementById('filterRequiredOnly').checked;
+  return activities.map(norm).filter(a=>{
+    if(from&&a.date<from)return false;
+    if(to&&a.date>to)return false;
+    if(cat&&a.category!==cat)return false;
+    if(reqOnly&&!a.required)return false;
+    return true;
+  });
+}
+
+function renderReport(){
+  const f=getFiltered();
+  document.getElementById('totalCount').textContent=f.length;
+  document.getElementById('totalTime').textContent=fmtDuration(f.reduce((s,a)=>s+a.minutes,0));
+  document.getElementById('totalDone').textContent=f.filter(a=>a.status==='concluido').length;
+  document.getElementById('totalRequired').textContent=f.filter(a=>a.required&&a.status!=='concluido').length;
+  renderPending(f);
+  renderResponseAnalysis(f);
+  renderWeightBarsReport(f);
+  renderBars('categoryBars',allCategories(),f,'category',false);
+  renderBars('statusBars',STATUS,f,'status',true);
+}
+
+function renderPending(f){
+  const pending=f.filter(a=>a.required&&a.status!=='concluido').sort((a,b)=>a.date.localeCompare(b.date));
+  const c=document.getElementById('pendingList');
+  if(!pending.length){c.innerHTML='<p class="no-data">Nenhuma obrigatória pendente no período.</p>';return;}
+  c.innerHTML=pending.map(a=>{
+    const cat=catInfo(a.category);
+    return`<div class="pending-row"><span class="entry-date">${fmtDate(a.date)}</span><span class="entry-cat" style="color:${cat.color}">${cat.label}</span><span class="pending-desc">${escHtml(a.desc)}</span><button class="ghost-btn mark-done-btn" data-id="${a.id}">Concluir</button></div>`;
+  }).join('');
+}
+
+function renderResponseAnalysis(f){
+  const c=document.getElementById('responseAnalysis');
+  const byType={};
+  f.filter(a=>a.responseType&&a.responseType!=='none').forEach(a=>{
+    if(!byType[a.responseType])byType[a.responseType]=[];
+    byType[a.responseType].push(a);
+  });
+  if(!Object.keys(byType).length){c.innerHTML='<p class="no-data">Sem atividades com tipo de resposta no período.</p>';return;}
+  let html='';
+
+  if(byType.sim_nao){
+    const sims=byType.sim_nao.filter(a=>a.responseValue==='sim').length;
+    const tot=byType.sim_nao.length,noes=tot-sims;
+    const pS=Math.round(sims/tot*100),pN=100-pS;
+    html+=`<div class="analysis-block"><h4>Sim / Não <span class="count-badge">${tot}</span></h4>
+      <div class="bar-row"><span class="bar-label" style="color:var(--green)">Sim</span><span class="bar-track"><span class="bar-fill" style="width:${pS}%;background:var(--green)"></span></span><span class="bar-value">${sims} (${pS}%)</span></div>
+      <div class="bar-row"><span class="bar-label" style="color:var(--red)">Não</span><span class="bar-track"><span class="bar-fill" style="width:${pN}%;background:var(--red)"></span></span><span class="bar-value">${noes} (${pN}%)</span></div>
+    </div>`;
+  }
+
+  if(byType.pontuacao){
+    const valid=byType.pontuacao.filter(a=>a.responseValue>0);
+    const avg=valid.length?(valid.reduce((s,a)=>s+a.responseValue,0)/valid.length).toFixed(1):'—';
+    const max=byType.pontuacao[0]?.responseConfig?.max||10;
+    const stars=avg!=='—'?'★'.repeat(Math.round(avg))+'☆'.repeat(Math.max(0,max-Math.round(avg))):'';
+    html+=`<div class="analysis-block"><h4>Pontuação <span class="count-badge">${byType.pontuacao.length}</span></h4>
+      <div class="score-avg-row"><span class="stars-display">${stars}</span><span class="analysis-stat">Média: <strong>${avg}/${max}</strong></span></div>
+    </div>`;
+  }
+
+  if(byType.reacao){
+    const counts={};byType.reacao.forEach(a=>{if(a.responseValue)counts[a.responseValue]=(counts[a.responseValue]||0)+1;});
+    const sorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+    html+=`<div class="analysis-block"><h4>Reações <span class="count-badge">${byType.reacao.length}</span></h4>
+      <div class="emoji-analysis">${sorted.map(([e,n])=>`<span class="emoji-count">${e}<span class="emoji-count-num">×${n}</span></span>`).join('')}</div>
+    </div>`;
+  }
+
+  if(byType.valor){
+    const byUnit={};
+    byType.valor.forEach(a=>{const u=(a.responseConfig?.unit||'').trim()||'(s/unidade)';if(a.responseValue!==null&&a.responseValue!==''){if(!byUnit[u])byUnit[u]=[];byUnit[u].push(Number(a.responseValue));}});
+    html+=`<div class="analysis-block"><h4>Valores <span class="count-badge">${byType.valor.length}</span></h4>`;
+    Object.entries(byUnit).forEach(([u,vals])=>{const sum=vals.reduce((s,v)=>s+v,0);const avg=(sum/vals.length).toLocaleString('pt-BR',{maximumFractionDigits:2});html+=`<p class="analysis-stat">${escHtml(u)} — Soma: <strong>${sum.toLocaleString('pt-BR',{maximumFractionDigits:2})}</strong> | Média: <strong>${avg}</strong></p>`;});
+    html+=`</div>`;
+  }
+
+  if(byType.assinatura){
+    const n=byType.assinatura.filter(a=>a.responseValue).length;
+    const signers=[...new Set(byType.assinatura.map(a=>a.responseConfig?.signerLabel).filter(Boolean))];
+    html+=`<div class="analysis-block"><h4>Assinaturas <span class="count-badge">${byType.assinatura.length}</span></h4>
+      <p class="analysis-stat">${n} de ${byType.assinatura.length} com assinatura registrada</p>
+      ${signers.length?`<p class="analysis-stat">Assinantes: ${signers.map(escHtml).join(', ')}</p>`:''}
+    </div>`;
+  }
+
+  if(byType.personalizado){
+    const byLabel={};
+    byType.personalizado.forEach(a=>{const lbl=a.responseConfig?.fieldLabel||'Campo';if(!byLabel[lbl])byLabel[lbl]={type:a.responseConfig?.fieldType,vals:[]};if(a.responseValue!==null&&a.responseValue!=='')byLabel[lbl].vals.push(a.responseValue);});
+    html+=`<div class="analysis-block"><h4>Personalizado <span class="count-badge">${byType.personalizado.length}</span></h4>`;
+    Object.entries(byLabel).forEach(([lbl,data])=>{
+      html+=`<p class="analysis-stat-label">${escHtml(lbl)}</p>`;
+      if(data.type==='numero'&&data.vals.length){
+        const nums=data.vals.map(Number).filter(n=>!isNaN(n));
+        if(nums.length){const sum=nums.reduce((s,v)=>s+v,0);const avg=(sum/nums.length).toLocaleString('pt-BR',{maximumFractionDigits:2});html+=`<p class="analysis-stat">Soma: <strong>${sum.toLocaleString('pt-BR',{maximumFractionDigits:2})}</strong> | Média: <strong>${avg}</strong></p>`;}
+      } else {
+        const counts={};data.vals.forEach(v=>{counts[v]=(counts[v]||0)+1;});
+        const top=Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,6);
+        html+=`<div class="text-values">${top.map(([v,n])=>`<span class="text-value-chip">${escHtml(v)} ×${n}</span>`).join('')}</div>`;
+      }
+    });
+    html+=`</div>`;
+  }
+
+  c.innerHTML=html;
+}
+
+function renderWeightBarsReport(f){
+  const c=document.getElementById('weightBarsReport');
+  if(!f.length){c.innerHTML='<p class="no-data">Sem dados.</p>';return;}
+  const counts={};f.forEach(a=>{const w=a.weight||5;counts[w]=(counts[w]||0)+1;});
+  const max=Math.max(...Object.values(counts),1);
+  c.innerHTML=Object.entries(counts).sort((a,b)=>a[0]-b[0]).map(([w,n])=>{
+    const wn=Number(w),color=wn<=3?'var(--green)':wn<=6?'var(--gold)':'var(--red)';
+    const pct=Math.round(n/max*100);
+    return`<div class="bar-row"><span class="bar-label" style="color:${color}">Peso ${w}</span><span class="bar-track"><span class="bar-fill" style="width:${pct}%;background:${color}"></span></span><span class="bar-value">${n}</span></div>`;
+  }).join('');
+}
+
+function renderBars(cId,dim,f,field,byCount){
+  const c=document.getElementById(cId);
+  const rows=dim.map(d=>{const items=f.filter(a=>a[field]===d.id);const v=byCount?items.length:items.reduce((s,a)=>s+a.minutes,0);return{...d,v,n:items.length};}).filter(r=>r.n>0);
+  if(!rows.length){c.innerHTML='<p class="no-data">Sem dados.</p>';return;}
+  rows.sort((a,b)=>b.v-a.v);
+  const max=Math.max(...rows.map(r=>r.v),1);
+  c.innerHTML=rows.map(r=>`<div class="bar-row"><span class="bar-label" style="color:${r.color}">${r.label}</span><span class="bar-track"><span class="bar-fill" style="width:${Math.round(r.v/max*100)}%;background:${r.color}"></span></span><span class="bar-value">${byCount?r.v:fmtDuration(r.v)}</span></div>`).join('');
+}
+
+/* ===== CATEGORY UI ===== */
+function refreshCatSelects(){
+  const cats=allCategories();
+  const fCat=document.getElementById('f-category'),prev=fCat.value;
+  fCat.innerHTML=cats.map(c=>`<option value="${c.id}">${c.label}</option>`).join('');
+  if(cats.some(c=>c.id===prev))fCat.value=prev;
+  const flt=document.getElementById('filterCategory'),prev2=flt.value;
+  flt.innerHTML='<option value="">Todas</option>'+cats.map(c=>`<option value="${c.id}">${c.label}</option>`).join('');
+  if(cats.some(c=>c.id===prev2))flt.value=prev2;
+  document.getElementById('customCatChips').innerHTML=customCategories.map(c=>`<span class="cat-chip" style="color:${c.color}">${c.label}<button type="button" class="chip-del" data-id="${c.id}">×</button></span>`).join('');
+}
+
+/* ===== CSV ===== */
+function exportCSV(){
+  const f=getFiltered();
+  if(!f.length){alert('Nenhum lançamento para exportar.');return;}
+  const header=['Data','Categoria','Descrição','Duração(min)','Status','Obrigatória','Peso','TipoResposta','Resposta'];
+  const rows=f.map(a=>{
+    let rv='';
+    if(a.responseType&&a.responseType!=='none'&&a.responseValue!==null){
+      if(a.responseType==='assinatura')rv='[Assinatura]';
+      else rv=String(a.responseValue);
+    }
+    return[a.date,catInfo(a.category).label,a.desc.replace(/"/g,'""'),a.minutes,statusInfo(a.status).label,a.required?'Sim':'Não',a.weight||5,a.responseType||'none',rv.replace(/"/g,'""')];
+  });
+  const csv=[header,...rows].map(r=>r.map(v=>`"${v}"`).join(',')).join('\n');
+  const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8;'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`atividades-${todayISO()}.csv`;document.body.appendChild(a);a.click();a.remove();
+}
+
+/* ===== LIGHTBOX ===== */
+function openLightbox(src){document.getElementById('modalImg').src=src;document.getElementById('photoModal').classList.add('visible');}
+function closeLightbox(){document.getElementById('photoModal').classList.remove('visible');document.getElementById('modalImg').src='';}
+
+/* ===== INIT ===== */
+async function init(){
+  // Date stamp
+  const d=new Date();
+  document.getElementById('todayStamp').textContent=`${String(d.getDate()).padStart(2,'0')} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
+
+  // Load data
+  await loadAll();
+
+  // Status select
+  document.getElementById('f-status').innerHTML=STATUS.map(s=>`<option value="${s.id}">${s.label}</option>`).join('');
+  document.getElementById('f-date').value=todayISO();
+
+  // Categories
+  refreshCatSelects();
+
+  // Weight buttons
+  buildWeightBtns();
+
+  // Signature canvas
+  setupSigCanvas();
+
+  // Response type pills
+  document.getElementById('respTypePills').addEventListener('click',e=>{
+    const pill=e.target.closest('.resp-pill');
+    if(!pill)return;
+    currentStarValue=0;selectedEmoji=null;selectedSimNao=null;
+    switchResponseType(pill.dataset.type);
+  });
+
+  // Pontuação max change → rebuild stars
+  document.getElementById('rc-pont-max').addEventListener('change',()=>{currentStarValue=0;document.getElementById('rv-pontuacao').value=0;buildStars();});
+  // Pontuação number input → sync stars
+  document.getElementById('rv-pontuacao').addEventListener('input',e=>{
+    const max=Number(document.getElementById('rc-pont-max').value)||10;
+    currentStarValue=Math.min(Number(e.target.value)||0,max);
+    document.querySelectorAll('.star-btn').forEach(s=>s.classList.toggle('active',Number(s.dataset.v)<=currentStarValue));
+  });
+
+  // Sim/Não buttons
+  document.getElementById('snSim').addEventListener('click',()=>{
+    document.getElementById('rv-sim_nao').value='sim';
+    document.getElementById('snSim').classList.add('active-sim');
+    document.getElementById('snNao').classList.remove('active-nao');
+  });
+  document.getElementById('snNao').addEventListener('click',()=>{
+    document.getElementById('rv-sim_nao').value='nao';
+    document.getElementById('snNao').classList.add('active-nao');
+    document.getElementById('snSim').classList.remove('active-sim');
+  });
+
+  // Add custom emoji
+  document.getElementById('addEmojiBtn').addEventListener('click',async()=>{
+    const v=(document.getElementById('emojiCustomInput').value||'').trim();
+    if(!v)return;
+    if(!customEmojis.includes(v)){customEmojis.push(v);await saveEmojis();}
+    document.getElementById('emojiCustomInput').value='';
+    buildEmojiGrid();
+  });
+
+  // Custom field type change
+  document.getElementById('rc-cust-type').addEventListener('change',updateCustomValueField);
+  document.getElementById('rc-cust-opts').addEventListener('input',()=>{if(document.getElementById('rc-cust-type').value==='escolha')updateCustomValueField();});
+
+  // Photo
+  document.getElementById('f-photo').addEventListener('change',async e=>{
+    const file=e.target.files[0];if(!file)return;
+    try{pendingPhoto=await compressImage(file);document.getElementById('photoPreview').src=pendingPhoto;document.getElementById('photoPreviewWrap').style.display='flex';}
+    catch{alert('Não foi possível carregar a imagem.');pendingPhoto=null;}
+  });
+  document.getElementById('removePhotoBtn').addEventListener('click',()=>{pendingPhoto=null;document.getElementById('f-photo').value='';document.getElementById('photoPreviewWrap').style.display='none';});
+
+  // Add category
+  document.getElementById('addCatBtn').addEventListener('click',async()=>{
+    const input=document.getElementById('newCatInput');
+    const label=input.value.trim();if(!label)return;
+    if(allCategories().some(c=>c.label.toLowerCase()===label.toLowerCase())){alert('Categoria já existe.');return;}
+    let id=slugify(label)||('cat'+Date.now());
+    if(allCategories().some(c=>c.id===id))id+='-'+Math.random().toString(36).slice(2,5);
+    const color=PALETTE[customCategories.length%PALETTE.length];
+    customCategories.push({id,label,color,removable:true});
+    await saveCats();refreshCatSelects();document.getElementById('f-category').value=id;input.value='';
+  });
+  document.getElementById('customCatChips').addEventListener('click',async e=>{
+    const b=e.target.closest('.chip-del');if(!b)return;
+    if(!confirm('Remover categoria? Atividades com ela ficam como "Outro".'))return;
+    customCategories=customCategories.filter(c=>c.id!==b.dataset.id);
+    await saveCats();refreshCatSelects();renderAll();
+  });
+
+  // Filters
+  ['filterFrom','filterTo','filterCategory','filterRequiredOnly'].forEach(id=>document.getElementById(id).addEventListener('change',renderReport));
+  document.getElementById('clearFilters').addEventListener('click',()=>{
+    ['filterFrom','filterTo'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('filterCategory').value='';
+    document.getElementById('filterRequiredOnly').checked=false;
+    renderReport();
+  });
+
+  // Export / print / reset
+  document.getElementById('exportBtn').addEventListener('click',exportCSV);
+  document.getElementById('printBtn').addEventListener('click',()=>window.print());
+  document.getElementById('resetBtn').addEventListener('click',async()=>{
+    if(!confirm('Apagar todos os lançamentos?'))return;
+    activities=[];await save();renderAll();
+  });
+
+  // Entry list events
+  document.getElementById('entriesList').addEventListener('click',e=>{
+    const del=e.target.closest('.entry-del');
+    if(del){if(confirm('Excluir lançamento?')){activities=activities.filter(a=>a.id!==del.dataset.id);save();renderAll();}return;}
+    const thumb=e.target.closest('.entry-thumb');
+    if(thumb)openLightbox(thumb.dataset.photo);
+  });
+
+  // Pending mark done
+  document.getElementById('pendingList').addEventListener('click',e=>{
+    const b=e.target.closest('.mark-done-btn');if(!b)return;
+    const a=activities.find(x=>x.id===b.dataset.id);if(a){a.status='concluido';save();renderAll();}
+  });
+
+  // Form submit
+  document.getElementById('entryForm').addEventListener('submit',e=>{
+    e.preventDefault();
+    const date=document.getElementById('f-date').value;
+    const category=document.getElementById('f-category').value;
+    const desc=document.getElementById('f-desc').value.trim();
+    const hours=parseInt(document.getElementById('f-hours').value)||0;
+    const minutes=parseInt(document.getElementById('f-minutes').value)||0;
+    const status=document.getElementById('f-status').value;
+    const required=document.getElementById('f-required').checked;
+    if(!date||!desc||(hours===0&&minutes===0)){alert('Preencha data, descrição e duração.');return;}
+    const resp=getResponseData();
+    const entry={
+      id:Date.now().toString(36)+Math.random().toString(36).slice(2,7),
+      date,category,desc,minutes:hours*60+minutes,status,required,
+      photo:pendingPhoto,weight:selectedWeight,
+      ...resp,createdAt:Date.now()
+    };
+    activities.unshift(entry);save();renderAll();
+    document.getElementById('entryForm').reset();
+    document.getElementById('f-date').value=todayISO();
+    pendingPhoto=null;currentStarValue=0;selectedEmoji=null;selectedWeight=5;
+    document.getElementById('photoPreviewWrap').style.display='none';
+    switchResponseType('none');
+    buildWeightBtns();
+    document.getElementById('snSim').classList.remove('active-sim');
+    document.getElementById('snNao').classList.remove('active-nao');
+  });
+
+  // Lightbox / keyboard
+  document.getElementById('closeModalBtn').addEventListener('click',closeLightbox);
+  document.getElementById('photoModal').addEventListener('click',e=>{if(e.target.id==='photoModal')closeLightbox();});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLightbox();});
+
+  renderAll();
+}
+function renderAll(){renderEntries();renderReport();}
+
+init();
+</script>
+</body>
+</html>
